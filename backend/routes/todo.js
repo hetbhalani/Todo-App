@@ -1,7 +1,8 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const router = express.Router();
-const Todo = require("../database.js");
+const Todo = require('../db_todo'); 
+const verifyToken = require("../authMiddleware.js")
 
 const todoSchema = new mongoose.Schema({
   title: String,
@@ -9,7 +10,7 @@ const todoSchema = new mongoose.Schema({
   idDone: Boolean,
 });
 
-router.post("/", (req, res) => {
+router.post("/", verifyToken,(req, res) => {
   const title = req.body.title;
   const description = req.body.description;
 
@@ -31,7 +32,7 @@ router.post("/", (req, res) => {
     }
 });
 
-router.get("/", async(req, res) => {
+router.get("/", verifyToken, async(req, res) => {
     try{
         const getTodo = await Todo.find({});
         res.status(200).json({
