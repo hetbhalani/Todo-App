@@ -1,6 +1,8 @@
 const express = require("express")
 const jwt = require("jsonwebtoken")
 const User = require ('../db_user')
+const dotenv = require("dotenv")
+dotenv.config()
 
 const router = express.Router();
 
@@ -38,10 +40,12 @@ router.post('/login', async(req,res)=>{
 
 
         const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET);
-
+        console.log(token);
+        
         res.cookie("token",token,{
             httpOnly : true,
-            secure: true,
+            secure: false,
+            sameSite: 'none',
         })
 
         res.json({
