@@ -7,18 +7,24 @@ const verifyToken = require("../authMiddleware.js")
 const todoSchema = new mongoose.Schema({
   title: String,
   description: String,
-  idDone: Boolean,
+  isDone: Boolean,
+  userId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+    required: true
+  }
 });
 
-router.post("/", verifyToken,(req, res) => {
+router.post("/", verifyToken,async(req, res) => {
   const title = req.body.title;
   const description = req.body.description;
-
+  const userId = req.user._id;
     try {
-        const newTodo = Todo.create({
+        const newTodo = await Todo.create({
             title,
             description,
-            isDone:false
+            isDone:false,
+            userId
         });
         
         res.status(200).json({
@@ -33,8 +39,9 @@ router.post("/", verifyToken,(req, res) => {
 });
 
 router.get("/", verifyToken, async(req, res) => {
+    const userId = req.user._id;
     try{
-        const getTodo = await Todo.find({});
+        const getTodo = await Todo.find({userId});
         res.status(200).json({
             getTodo,
         })
@@ -52,13 +59,14 @@ router.put('/:id',async(req,res)=>{
     
     const title = req.body.title;
     const description = req.body.description;
+    const userId = req.user._id;
 
     try {
         const todo = await Todo.findByIdAndUpdate(
-            id,{
+            { _id: id, userId },{
                 title,
                 description
-            }
+            },{ new: true }
         )
         if (!todo) {
             return res.status(404).json({msg:'Todo not found'});
@@ -75,9 +83,10 @@ router.put('/:id',async(req,res)=>{
 
 router.delete('/:id', async(req,res)=>{
     const id = req.params.id
+    const userId = req.user._id;
 
     try{
-        const todo = await Todo.findByIdAndDelete(id)
+        const todo = await Todo.findByIdAndDelete({ _id: id, userId })
         if (!todo) {
             return res.status(404).json({message:'Todo not found'});
         }
