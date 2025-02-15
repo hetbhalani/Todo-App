@@ -10,9 +10,17 @@ function LogInForm() {
   async function checkValidation(e, email, password){
     e.preventDefault();
 
-    const response = await axios.post("http://localhost:3000/auth/login", {
-      email,password
+    const response = await fetch("http://localhost:3000/auth/login", {
+      method: "POST", 
+      credentials: "include",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ email, password }),
     });
+
+    const data = await response.json();
+    console.log(data);
 
     console.log("login successful:", response.data);
     setEmail("");

@@ -11,9 +11,18 @@ import axios from "axios";
   async function checkValidation(e, email, password){
     e.preventDefault();
 
-    const response = await axios.post("http://localhost:3000/auth/signup", {
-      email,password
+    const response = await fetch("http://localhost:3000/auth/signup", {
+      method: "POST",
+      credentials: "include",
+      headers: {
+        "Content-Type": "application/json", 
+      },
+      body: JSON.stringify({ email, password }), 
     });
+
+    const data = await response.json();
+    console.log(data);
+    
 
     console.log("Signup successful:", response.data);
     setEmail("");
