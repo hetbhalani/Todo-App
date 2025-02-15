@@ -1,10 +1,12 @@
 const jwt = require("jsonwebtoken")
+const dotenv = require("dotenv")
+dotenv.config()
+
 
 
 const verifyToken = (req, res, next) => {
-    console.log('Incoming token:', req.cookies.token);
-    
     const token = req.cookies.token;
+    console.log('Incoming token:', req);
 
     if (!token) {
         console.log('No token found');
