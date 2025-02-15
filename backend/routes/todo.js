@@ -4,16 +4,16 @@ const router = express.Router();
 const Todo = require('../db_todo'); 
 const verifyToken = require("../authMiddleware.js")
 
-const todoSchema = new mongoose.Schema({
-  title: String,
-  description: String,
-  isDone: Boolean,
-  userId: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'User',
-    required: true
-  }
-});
+// const todoSchema = new mongoose.Schema({
+//   title: String,
+//   description: String,
+//   isDone: Boolean,
+//   userId: {
+//     type: mongoose.Schema.Types.ObjectId,
+//     ref: 'User',
+//     required: true
+//   }
+// });
 
 router.post("/", verifyToken,async(req, res) => {
   const title = req.body.title;
