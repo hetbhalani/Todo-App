@@ -4,16 +4,6 @@ const router = express.Router();
 const Todo = require('../db_todo'); 
 const verifyToken = require("../authMiddleware.js")
 
-// const todoSchema = new mongoose.Schema({
-//   title: String,
-//   description: String,
-//   isDone: Boolean,
-//   userId: {
-//     type: mongoose.Schema.Types.ObjectId,
-//     ref: 'User',
-//     required: true
-//   }
-// });
 
 router.post("/", verifyToken,async(req, res) => {
   const title = req.body.title;
@@ -55,12 +45,13 @@ router.get("/", verifyToken, async(req, res) => {
 });
 
 
-router.put('/:id',async(req,res)=>{
+router.put('/:id', verifyToken, async(req,res)=>{
     const id = req.params.id
     
     const title = req.body.title;
     const description = req.body.description;
-    const userId = req.user._id;
+    console.log('req.userId: '+req.user)
+    const userId = req.user.id;
 
     try {
         const todo = await Todo.findByIdAndUpdate(
@@ -82,7 +73,7 @@ router.put('/:id',async(req,res)=>{
     }
 })
 
-router.delete('/:id', async(req,res)=>{
+router.delete('/:id', verifyToken, async(req,res)=>{
     const id = req.params.id
     const userId = req.user._id;
 
