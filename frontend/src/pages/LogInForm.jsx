@@ -1,11 +1,12 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
 import axios from "axios";
 
 function LogInForm() {
   const [email,setEmail] = useState("")
   const [password,setPassword] = useState("")
+  const navigate = useNavigate();
 
   async function checkValidation(e, email, password){
     e.preventDefault();
@@ -20,9 +21,16 @@ function LogInForm() {
     });
 
     const data = await response.json();
+
+    if(response.status === 200){
+      navigate('/todo');
+      console.log("login successful");
+    }
+    else {
+      alert('login failed');
+    }
     console.log(data);
 
-    console.log("login successful:", response.data);
     setEmail("");
     setPassword("");
   }

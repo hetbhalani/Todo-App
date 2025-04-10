@@ -1,12 +1,13 @@
 import React, { useState,useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link,useNavigate } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
 import LogInForm from "./LogInForm";
 import axios from "axios";
 
  function SigninForm() {
-    const [email,setEmail] = useState("")
+  const [email,setEmail] = useState("")
   const [password,setPassword] = useState("")
+  const navigate = useNavigate();
 
   async function checkValidation(e, email, password){
     e.preventDefault();
@@ -21,10 +22,16 @@ import axios from "axios";
     });
 
     const data = await response.json();
-    console.log(data);
-    
 
-    console.log("Signup successful:", response.data);
+    if(response.status === 200){
+      navigate('/login');
+      console.log("signup successful");
+    }
+    else {
+      alert('login failed');
+    }
+    console.log(data);
+
     setEmail("");
     setPassword("");
   }
