@@ -6,14 +6,16 @@ import { BrowserRouter as Router, Routes, Route, BrowserRouter } from "react-rou
 import SigninForm from "./pages/SignInForm";
 import LogInForm from "./pages/LogInForm";
 import Todo from './Todo'
+import { Navigate } from 'react-router-dom';
 
 function App() {
   return (
        <Router>
       <Routes>
-        <Route path="/" element={<Todo />} />
+        <Route path="/todo" element={<Todo />} />
         <Route path="/signup" element={<SigninForm />} />
         <Route path="/login" element={<LogInForm />} />
+        <Route path="/" element={<Navigate to="/login" replace />} />
       </Routes>
     </Router>
   );

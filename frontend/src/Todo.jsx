@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
-import { PartyPopper as Party } from 'lucide-react';
+import { useNavigate } from 'react-router-dom'; 
 import confetti from 'canvas-confetti';
 
 function Todo() {
@@ -9,6 +9,7 @@ function Todo() {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [editId, setEditId] = useState(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     fetchTodo();
@@ -56,9 +57,11 @@ function Todo() {
       if (!response.ok) {
         if (response.status === 401) {
           alert("You need to log in to access todos.");
+          navigate('/login'); 
           return;
         }
       }
+
 
       const data = await response.json();
       console.log(data);
@@ -83,12 +86,16 @@ function Todo() {
         credentials: "include",
         body: JSON.stringify({ title, description })
       });
+      
 
       setTitle('');
       setDescription('');
       fetchTodo();
     } catch (err) {
       console.error("Error adding todo:", err);
+      alert("Login to add todo");
+      navigate('/login'); 
+      return;
     }
   }
 
@@ -123,8 +130,8 @@ function Todo() {
       <div className="relative">
       </div>
       <h1 className='mb-4 text-white'>Todo-App</h1>
-      <div className='container bg-white p-5 rounded shadow d-flex' style={{ width: '1200px', height: '500px' }}>
-        <div className='container bg-light border border-primary p-5 rounded h-100 ms-0' style={{ width: '45%' }}>
+      <div className='container p-5 rounded d-flex' style={{ width: '1200px', height: '500px' }}>
+        <div className='container bg-light border border-primary p-5 rounded-4 h-100 ms-0' style={{ width: '45%' }}>
           <div className="mb-3 text-start">
             <label htmlFor="exampleFormControlInput1" className="form-label">Title</label>
             <input type="text" className="form-control" id="exampleFormControlInput1"
@@ -143,7 +150,7 @@ function Todo() {
             <button className='btn btn-primary' onClick={addTodo}>Add todo</button>
           )}
         </div>
-        <div className='container bg-light border border-primary ms-3 rounded h-100 me-0'>
+        <div className='container bg-light border border-primary ms-3 rounded-4 h-100 me-0'>
           <h4 className="text-primary mt-2 mb-2">Your Todos</h4>
           {todo.length === 0 ? (
             <p>No todos available</p>
